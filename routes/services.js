@@ -51,8 +51,8 @@ router.post('/:reqService/:resService', function(req, res, next) {
 			args.push(req.body[key]);
 		}
 
-    client.hmset(redisKey, args, (err, res) => {
-      res.send(res);
+    client.hmset(redisKey, args, (err, redisResponse) => {
+      res.send(redisResponse);
     });
   })
   .catch(e => console.log('An error occurred: ', e));
