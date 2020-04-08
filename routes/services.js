@@ -107,7 +107,7 @@ router.put('/', function(req, res, next) {
 	connection.then((client) => {
 		client.hset('service-hosts', name, address, (err, redisAddressResponse) => {
 		  client.hset('service-credentials', name, password, (err, redisPasswordResponse) => {
-		  	res.status(201).send(`Service ${name} updated.`);
+		  	res.status(204).send(`Service ${name} updated.`);
 		  })
 		});
   })
