@@ -20,14 +20,6 @@ const connection = new Promise((resolve, reject) => {
   });
 })
 
-const serviceAlreadyExists = new Promise((resolve, reject) => {
-	(client, service) => {
-		client.hget('service-hosts', service, (err, existingService) => {
-			resolve(existingService);
-		});
-	}
-});
-
 // GET all service hosts
 router.get('/', function(req, res, next) {
   connection.then((client) => {
@@ -59,31 +51,17 @@ router.post('/', function(req, res, next) {
 	}
 
 	connection.then((client) => {
-		serviceAlreadyExists
-		.then(existingService => {
-			console.log(existingService);
-
+		client.hget('service-hosts', service, (err, existingService) => {
 			if (existingService) {
 				res.status(403).send(`The service ${name} already exists`);
+			} else {
+		    client.hset('service-hosts', name, address, (err, redisAddressResponse) => {
+		      client.hset('service-credentials', name, password, (err, redisPasswordResponse) => {
+		      	res.status(201).send(`New service ${name} created.`);
+		      })
+		    });
 			}
-		})
-		.catch(e => console.log(e))
-		.then(_ => {
-			const redisKey = `${req.params["reqService"]}:${req.params["resService"]}`;
-			const args = [];
-
-			for (key in req.body) {
-				args.push(key);
-				args.push(req.body[key]);
-			}
-
-	    client.hset('service-hosts', name, address, (err, redisAddressResponse) => {
-	      client.hset('service-credentials', name, password, (err, redisPasswordResponse) => {
-	      	res.status(201).send(`New service ${name} created.`);
-	      })
-	    });
-		})
-		.catch(e => console.log(e));
+		});
   })
   .catch(e => console.log('An error occurred: ', e));
 });
