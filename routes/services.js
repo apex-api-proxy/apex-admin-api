@@ -59,7 +59,7 @@ router.post('/', function(req, res, next) {
 	}
 
 	connection.then((client) => {
-		serviceAlreadyExists(client, name).then(existingService => {
+		serviceAlreadyExists.then(existingService => {
 			if (existingService) {
 				res.status(403).send(`The service ${name} already exists`);
 			}
