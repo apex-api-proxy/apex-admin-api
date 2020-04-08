@@ -65,7 +65,7 @@ router.get('/:reqService/:resService', function(req, res, next) {
     });
   })
   .then((client) => {
-    client.get(`${req.params["reqService"]}:${req.params["resService"]}`, (err, config) => {
+    client.hgetall(`${req.params["reqService"]}:${req.params["resService"]}`, (err, config) => {
       res.send(config);
     });
   })
