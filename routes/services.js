@@ -20,11 +20,57 @@ const connection = new Promise((resolve, reject) => {
   });
 })
 
+const serviceAlreadyExists = (client, service) => {
+	client.hget('service-hosts', service, (err, existingService) => {
+		return !!existingService;
+	});
+};
+
 // GET all service hosts
 router.get('/', function(req, res, next) {
   connection.then((client) => {
     client.hgetall('service-hosts', (err, services) => {
     	res.send(services);
+    });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
+// GET single service host
+router.get('/:service', function(req, res, next) {
+  connection.then((client) => {
+    client.hgetall('service-hosts', req.params["service"], (err, service) => {
+    	res.send(service);
+    });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
+// POST new service host
+router.post('/', function(req, res, next) {
+	const name = req.body["name"];
+	const address = req.body["address"];
+	const password = req.body["password"];
+
+	if (!(name && address && password)) {
+		res.status(422).send("Request body must include a unique service name, an address, and a password.");
+	}
+
+	connection.then((client) => {
+		if (serviceAlreadyExists(client, name)) {
+			res.status(403).send(`The service ${name} already exists`);
+		}
+
+		const redisKey = `${req.params["reqService"]}:${req.params["resService"]}`;
+		const args = [];
+
+		for (key in req.body) {
+			args.push(key);
+			args.push(req.body[key]);
+		}
+
+    client.hmset(redisKey, args, (err, redisResponse) => {
+      res.send(redisResponse);
     });
   })
   .catch(e => console.log('An error occurred: ', e));
