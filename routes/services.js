@@ -43,7 +43,7 @@ router.get('/test', function(req, res, next) {
     });
   })
   .then((client) => {
-    client.get(`postman:cnn`, (err, config) => {
+    client.hgetall(`postman:cnn`, (err, config) => {
       res.send(config);
     });
   })
