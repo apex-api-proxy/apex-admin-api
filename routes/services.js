@@ -20,7 +20,7 @@ const connection = new Promise((resolve, reject) => {
   });
 })
 
-/* GET home page. */
+// GET all service hosts
 router.get('/', function(req, res, next) {
   connection.then((client) => {
     client.hgetall('service-hosts', (err, services) => {
@@ -36,6 +36,18 @@ router.get('/:reqService/:resService', function(req, res, next) {
     client.hgetall(`${req.params["reqService"]}:${req.params["resService"]}`, (err, config) => {
       res.send(config);
     });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
+// POST config for requesting/responding service combination
+router.post('/:reqService/:resService', function(req, res, next) {
+	connection.then((client) => {
+		console.log('typeof req.body: ', typeof req.body);
+		console.log('req.body: ', req.body);
+    // client.hmset(req.body, (err, config) => {
+    //   res.send(config);
+    // });
   })
   .catch(e => console.log('An error occurred: ', e));
 });
