@@ -40,6 +40,16 @@ router.get('/:service', function(req, res, next) {
   .catch(e => console.log('An error occurred: ', e));
 });
 
+// GET single service host credentials
+router.get('/:service/credentials', function(req, res, next) {
+  connection.then((client) => {
+    client.hget('service-credentials', req.params["service"], (err, credentials) => {
+    	res.send(credentials);
+    });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
 // POST new service host
 router.post('/', function(req, res, next) {
 	const name = req.body["name"];
