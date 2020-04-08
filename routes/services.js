@@ -94,4 +94,24 @@ router.post('/:reqService/:resService', function(req, res, next) {
   .catch(e => console.log('An error occurred: ', e));
 });
 
+// PUT updated service info
+router.put('/', function(req, res, next) {
+	const name = req.body["name"];
+	const address = req.body["address"];
+	const password = req.body["password"];
+
+	if (!(name && address && password)) {
+		res.status(422).send("Request body must include a unique service name, an address, and a password.");
+	}
+
+	connection.then((client) => {
+		client.hset('service-hosts', name, address, (err, redisAddressResponse) => {
+		  client.hset('service-credentials', name, password, (err, redisPasswordResponse) => {
+		  	res.status(201).send(`Service ${name} updated.`);
+		  })
+		});
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
 module.exports = router;
