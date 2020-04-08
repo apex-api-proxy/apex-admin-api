@@ -39,7 +39,7 @@ router.get('/', function(req, res, next) {
 // GET single service host
 router.get('/:service', function(req, res, next) {
   connection.then((client) => {
-    client.hgetall('service-hosts', req.params["service"], (err, service) => {
+    client.hget('service-hosts', req.params["service"], (err, service) => {
     	res.send(service);
     });
   })
