@@ -6,7 +6,7 @@ const HOST = process.env.REDIS_IP;
 const client = redis.createClient(PORT, HOST);
 
 /* GET home page. */
-router.get('/services', function(req, res, next) {
+router.get('/', function(req, res, next) {
 	new Promise((resolve, reject) => {
     const client = redis.createClient(PORT, HOST);
 
@@ -28,34 +28,48 @@ router.get('/services', function(req, res, next) {
   .catch(e => console.log('An error occurred: ', e));
 });
 
-// router.get('/:service', function(req, res, next) {
-// 	new Promise((resolve, reject) => {
-//     const client = redis.createClient(PORT, HOST);
+router.get('/test', function(req, res, next) {
+	new Promise((resolve, reject) => {
+    const client = redis.createClient(PORT, HOST);
 
-//     client.on('connect', () => {
-//       resolve(client);
-//     });
+    client.on('connect', () => {
+      resolve(client);
+    });
 
-//     client.on('error', (err) => {
-//       console.log('An error occurred while connecting to the config store:');
-//       console.error(err);
-//       console.log('\n');
-//     });
-//   })
-//   .then((client) => {
-//     client.get(req.params["service"], (err, config) => {
-//       if (config === null) {
-//         client.hgetall('default:default', (err, defaultConfig) => {
-//           outgoingResponse.locals.config = defaultConfig;
-//           next();
-//         });
-//       } else {
-//         outgoingResponse.locals.config = config;
-//         next();
-//       }
-//     });
-//   })
-//   .catch(e => console.log('An error occurred: ', e));
-// });
+    client.on('error', (err) => {
+      console.log('An error occurred while connecting to the config store:');
+      console.error(err);
+      console.log('\n');
+    });
+  })
+  .then((client) => {
+    client.get(`postman:cnn`, (err, config) => {
+      res.send(config);
+    });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
+
+router.get('/:reqService/:resService', function(req, res, next) {
+	new Promise((resolve, reject) => {
+    const client = redis.createClient(PORT, HOST);
+
+    client.on('connect', () => {
+      resolve(client);
+    });
+
+    client.on('error', (err) => {
+      console.log('An error occurred while connecting to the config store:');
+      console.error(err);
+      console.log('\n');
+    });
+  })
+  .then((client) => {
+    client.get(`${req.params["reqService"]}:${req.params["resService"]}`, (err, config) => {
+      res.send(config);
+    });
+  })
+  .catch(e => console.log('An error occurred: ', e));
+});
 
 module.exports = router;
