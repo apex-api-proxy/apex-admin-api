@@ -51,7 +51,7 @@ router.post('/', function(req, res, next) {
 	}
 
 	connection.then((client) => {
-		client.hget('service-hosts', service, (err, existingService) => {
+		client.hget('service-hosts', name, (err, existingService) => {
 			if (existingService) {
 				res.status(403).send(`The service ${name} already exists`);
 			} else {
