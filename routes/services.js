@@ -20,9 +20,9 @@ const connection = new Promise((resolve, reject) => {
   });
 })
 
-const serviceAlreadyExists = (client, service) => {
+const serviceAlreadyExists = new Promise(client, service, resolve) => {
 	client.hget('service-hosts', service, (err, existingService) => {
-		return !!existingService;
+		resolve(existingService);
 	});
 };
 
@@ -57,9 +57,11 @@ router.post('/', function(req, res, next) {
 	}
 
 	connection.then((client) => {
-		if (serviceAlreadyExists(client, name)) {
-			res.status(403).send(`The service ${name} already exists`);
-		}
+		serviceAlreadyExists(client, name).then(existingService => {
+			if (existingService) {
+				res.status(403).send(`The service ${name} already exists`);
+			}
+		})
 
 		const redisKey = `${req.params["reqService"]}:${req.params["resService"]}`;
 		const args = [];
