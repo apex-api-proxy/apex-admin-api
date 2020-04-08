@@ -69,8 +69,10 @@ router.post('/', function(req, res, next) {
 			args.push(req.body[key]);
 		}
 
-    client.hmset(redisKey, args, (err, redisResponse) => {
-      res.send(redisResponse);
+    client.hset('service-hosts', name, address, (err, redisAddressResponse) => {
+      client.hset('service-credentials', name, password, (err, redisPasswordResponse) => {
+      	res.status(201).send(`New service ${name} created.`);
+      })
     });
   })
   .catch(e => console.log('An error occurred: ', e));
