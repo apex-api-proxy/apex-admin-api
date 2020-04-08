@@ -43,11 +43,17 @@ router.get('/:reqService/:resService', function(req, res, next) {
 // POST config for requesting/responding service combination
 router.post('/:reqService/:resService', function(req, res, next) {
 	connection.then((client) => {
-		console.log('typeof req.body: ', typeof req.body);
-		console.log('req.body: ', req.body);
-    // client.hmset(req.body, (err, config) => {
-    //   res.send(config);
-    // });
+		const redisKey = `${req.params["reqService"]}:${req.params["resService"]}`;
+		const args = [];
+
+		for (key in req.body) {
+			args.push(key);
+			args.push(req.body[key]);
+		}
+
+    client.hmset(redisKey, args, (err, res) => {
+      res.send(res);
+    });
   })
   .catch(e => console.log('An error occurred: ', e));
 });
