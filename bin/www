@@ -6,8 +6,8 @@
 
 var app = require('../app');
 var debug = require('debug')('apex-base:server');
-// var http = require('http');
-const https = require('https');
+var http = require('http');
+// const https = require('https');
 const fs = require('fs');
 
 /**
@@ -21,7 +21,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
