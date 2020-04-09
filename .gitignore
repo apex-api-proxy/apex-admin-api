@@ -3,3 +3,5 @@
 package-lock.json
 cert.pem
 key.pem
+server.key
+server.cert
