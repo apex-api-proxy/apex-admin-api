@@ -70,7 +70,11 @@ router.post('/', function(req, res, next) {
 router.get('/:reqService/:resService', function(req, res, next) {
 	connection.then((client) => {
     client.hgetall(`${req.params["reqService"]}:${req.params["resService"]}`, (err, config) => {
-      res.send(config);
+    	if (config) {
+    		res.send(config);
+    	} else {
+    		res.send({});
+    	}
     });
   })
   .catch(e => console.log('An error occurred: ', e));
