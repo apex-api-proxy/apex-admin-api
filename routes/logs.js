@@ -10,11 +10,10 @@ router.get('/:correlation_id', function(req, res, next) {
 	client.connect();
 
 	client.query(text, [req.params["correlation_id"]], (err, res) => {
-	  // console.log(err ? err.stack : res.rows[0].message); // Hello World!
 	  client.end();
-	});
 
-  res.send(res.rows);
+	  res.send(res.rows);
+	});
 });
 
 module.exports = router;
