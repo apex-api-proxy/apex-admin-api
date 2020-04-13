@@ -9,10 +9,12 @@ const text = 'SELECT * FROM apex_logs WHERE correlation_id = $1';
 router.get('/:correlation_id', function(req, res, next) {
 	client.connect();
 
-	client.query(text, [req.params["correlation_id"]], (err, res) => {
+	client.query(text, [req.params["correlation_id"]], (err, logsResponse) => {
+		console.log('Inside logs query callback');
+		console.log('logsResponse: ', logsResponse);
 	  client.end();
 
-	  res.send(res.rows);
+	  res.send(logsResponse.rows);
 	});
 });
 
