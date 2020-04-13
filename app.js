@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const servicesRouter = require('./routes/services');
 const configRouter = require('./routes/config');
-const lgosRouter = require('./routes/logs');
+const logsRouter = require('./routes/logs');
 
 var app = express();
 
