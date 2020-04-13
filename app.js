@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const servicesRouter = require('./routes/services');
 const configRouter = require('./routes/config');
-
+const lgosRouter = require('./routes/logs');
 
 var app = express();
 
@@ -28,7 +28,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/services', servicesRouter);
 app.use('/config', configRouter);
-// app.use('/users', usersRouter);
+app.use('/logs', logsRouter);
 
 // Set CORS headers
 app.use(function(req, res, next) {
