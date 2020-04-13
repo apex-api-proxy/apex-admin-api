@@ -11,6 +11,7 @@ router.get('/:correlation_id', function(req, res, next) {
 
 	client.query(text, [req.params["correlation_id"]], (err, logsResponse) => {
 		console.log('Inside logs query callback');
+		console.log('correlation_id: ', req.params["correlation_id"]);
 		console.log('logsResponse: ', logsResponse);
 	  client.end();
 
