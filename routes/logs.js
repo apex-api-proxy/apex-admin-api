@@ -23,7 +23,7 @@ router.get('/:correlation_id', function(req, res, next) {
 	  if (logsResponse) {
 	  	res.send(logsResponse.rows);
 	  }
-	  res.send();
+	  res.send({});
 	});
 });
 
