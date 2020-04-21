@@ -15,9 +15,6 @@ router.get('/:correlation_id', function(req, res, next) {
 	client.connect();
 
 	client.query(text, [req.params["correlation_id"]], (err, logsResponse) => {
-		console.log('Inside logs query callback');
-		console.log('correlation_id: ', req.params["correlation_id"]);
-		console.log('logsResponse: ', logsResponse);
 	  client.end();
 
 	  if (logsResponse) {
@@ -29,5 +26,3 @@ router.get('/:correlation_id', function(req, res, next) {
 });
 
 module.exports = router;
-
-// correlation_id: 9eb41e30-81ad-4357-b3a7-e6b060cbd8de
